@@ -17,10 +17,48 @@
         </header>
 
         <main>
+            <!-- Search Section -->
+            <section class="search-section">
+                <h2>Search Memos</h2>
+                <form method="get" th:action="@{/memos/search}" class="search-form">
+                    <div class="search-group">
+                        <div class="form-field">
+                            <label for="keyword">Title Keywords:</label>
+                            <input type="text" id="keyword" name="keyword" th:value="${keyword}" 
+                                   placeholder="e.g., Q4 2025" class="form-input">
+                            <small>Search by keywords in memo title. Use whole words for better results.</small>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="writer">Writer/Sender:</label>
+                            <input type="text" id="writer" name="writer" th:value="${writer}" 
+                                   placeholder="e.g., John Smith" class="form-input">
+                            <small>Filter by the person who created the memo.</small>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" name="startDate" th:value="${startDate}" class="form-input">
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" name="endDate" th:value="${endDate}" class="form-input">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-search">Search</button>
+                    <a href="/memos" class="btn btn-secondary">Clear</a>
+                </form>
+            </section>
+
+            <!-- Results Section -->
             <section class="memo-list">
-                <h2>Memos</h2>
+                <h2 th:if="${!isSearchResults}">Memos</h2>
+                <h2 th:if="${isSearchResults}">Search Results</h2>
                 <div th:if="${memos.isEmpty()}" class="empty-state">
-                    <p>No memos found. <a href="/memos/new">Create your first memo</a></p>
+                    <p th:if="${!isSearchResults}">No memos found. <a href="/memos/new">Create your first memo</a></p>
+                    <p th:if="${isSearchResults}">No memos match your search criteria. <a href="/memos">View all memos</a></p>
                 </div>
                 <div th:if="${!memos.isEmpty()}" class="memo-cards">
                     <div th:each="memo : ${memos}" class="memo-card">

@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -114,6 +116,66 @@ public class MemoController {
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    // Search memos by title, writer, and date range
+    @GetMapping("/search")
+    public String searchMemos(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "writer", required = false) String writer,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate,
+            Model model) {
+        
+        List<Memo> searchResults = new java.util.ArrayList<>();
+        
+        // Only perform search if at least one parameter is provided
+        if ((keyword != null && !keyword.trim().isEmpty()) ||
+            (writer != null && !writer.trim().isEmpty()) ||
+            (startDate != null && !startDate.trim().isEmpty())) {
+            
+            LocalDateTime startDateTime = null;
+            LocalDateTime endDateTime = null;
+            
+            // Parse date range if provided
+            if (startDate != null && !startDate.trim().isEmpty()) {
+                try {
+                    LocalDate start = LocalDate.parse(startDate);
+                    startDateTime = start.atStartOfDay();
+                } catch (Exception e) {
+                    // Invalid date format, ignore
+                }
+            }
+            
+            if (endDate != null && !endDate.trim().isEmpty()) {
+                try {
+                    LocalDate end = LocalDate.parse(endDate);
+                    endDateTime = end.atTime(LocalTime.MAX);
+                } catch (Exception e) {
+                    // Invalid date format, ignore
+                }
+            }
+            
+            // If only one date is provided, set the other
+            if (startDateTime != null && endDateTime == null) {
+                endDateTime = LocalDateTime.now();
+            }
+            if (endDateTime != null && startDateTime == null) {
+                startDateTime = LocalDateTime.of(2000, 1, 1, 0, 0);
+            }
+            
+            // Perform search
+            searchResults = memoService.searchMemos(keyword, writer, startDateTime, endDateTime);
+        }
+        
+        model.addAttribute("memos", searchResults);
+        model.addAttribute("keyword", keyword != null ? keyword : "");
+        model.addAttribute("writer", writer != null ? writer : "");
+        model.addAttribute("startDate", startDate != null ? startDate : "");
+        model.addAttribute("endDate", endDate != null ? endDate : "");
+        model.addAttribute("isSearchResults", true);
+        
+        return "memo-list";
     }
 
 }
