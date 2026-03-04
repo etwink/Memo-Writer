@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${memo.title}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Corporate Memo Management System</h1>
+            <nav>
+                <a href="/memos" class="nav-link">All Memos</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="memo-view-section">
+                <div class="memo-header">
+                    <h2 th:text="${memo.title}"></h2>
+                    <div class="memo-meta">
+                        <small th:text="${'Created: ' + #temporals.format(memo.createdAt, 'MMM dd, yyyy HH:mm')}"></small>
+                        <span th:if="${memo.updatedAt != memo.createdAt}" 
+                              th:text="${' | Updated: ' + #temporals.format(memo.updatedAt, 'MMM dd, yyyy HH:mm')}"></span>
+                    </div>
+                </div>
+
+                <div class="memo-view-content">
+                    <div class="memo-info-row">
+                        <div class="memo-info-item">
+                            <strong>From:</strong>
+                            <p th:text="${memo.fromSender}"></p>
+                        </div>
+                        <div class="memo-info-item">
+                            <strong>To:</strong>
+                            <p th:text="${memo.toRecipients}"></p>
+                        </div>
+                    </div>
+
+                    <div th:if="${memo.ccRecipients}" class="memo-info-row">
+                        <div class="memo-info-item">
+                            <strong>CC:</strong>
+                            <p th:text="${memo.ccRecipients}"></p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="memo-body-section">
+                        <h3>Memo Content</h3>
+                        <div class="memo-body" th:utext="${memo.body}"></div>
+                    </div>
+
+                    <div th:if="${memo.attachments}" class="memo-attachments-section">
+                        <h3>Attachments</h3>
+                        <p th:text="${memo.attachments}"></p>
+                    </div>
+
+                    <div class="memo-actions">
+                        <a th:href="@{/memos/edit/{id}(id=${memo.id})}" class="btn btn-warning">Edit</a>
+                        <a th:href="@{/memos/download/{id}(id=${memo.id})}" class="btn btn-success">Download as Word</a>
+                        <a th:href="@{/memos/delete/{id}(id=${memo.id})}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                        <a href="/memos" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Corporate Memo Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

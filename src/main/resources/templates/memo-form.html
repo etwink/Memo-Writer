@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${memo.id == null ? 'Create New Memo' : 'Edit Memo'}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Quill Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Corporate Memo Management System</h1>
+            <nav>
+                <a href="/memos" class="nav-link">All Memos</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="memo-form-section">
+                <h2 th:text="${memo.id == null ? 'Create New Memo' : 'Edit Memo'}"></h2>
+
+                <form th:action="${memo.id == null ? '/memos' : '/memos/' + memo.id}" 
+                      th:method="POST" 
+                      class="memo-form"
+                      id="memoForm">
+
+                    <div class="form-group">
+                        <label for="title">Memo Title</label>
+                        <input type="text" id="title" name="title" th:value="${memo.title}" 
+                               placeholder="Enter memo title" required class="form-control">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fromSender">From</label>
+                            <input type="text" id="fromSender" name="fromSender" th:value="${memo.fromSender}" 
+                                   placeholder="Your name" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="toRecipients">To</label>
+                            <input type="text" id="toRecipients" name="toRecipients" th:value="${memo.toRecipients}" 
+                                   placeholder="Recipient names (comma separated)" required class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ccRecipients">CC (Carbon Copy)</label>
+                        <input type="text" id="ccRecipients" name="ccRecipients" th:value="${memo.ccRecipients}" 
+                               placeholder="CC recipient names (comma separated)" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bodyEditor">Memo Body</label>
+                        <div id="toolbar" class="quill-toolbar">
+                            <button class="ql-bold" title="Bold"></button>
+                            <button class="ql-italic" title="Italic"></button>
+                            <button class="ql-underline" title="Underline"></button>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="ordered" title="Ordered List"></button>
+                                <button class="ql-list" value="bullet" title="Bullet List"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <select class="ql-align" title="Align">
+                                    <option selected></option>
+                                    <option value="center">Center</option>
+                                    <option value="right">Right</option>
+                                    <option value="justify">Justify</option>
+                                </select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-clean" title="Clear Formatting"></button>
+                            </span>
+                        </div>
+                        <div id="bodyEditor" class="quill-editor" style="min-height: 300px;"></div>
+                        <input type="hidden" id="body" name="body" th:value="${memo.body}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="attachments">Attachments</label>
+                        <input type="text" id="attachments" name="attachments" th:value="${memo.attachments}" 
+                               placeholder="List of file attachments (comma separated)" class="form-control">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">
+                            <span th:if="${memo.id == null}">Create Memo</span>
+                            <span th:if="${memo.id != null}">Update Memo</span>
+                        </button>
+                        <a href="/memos" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Corporate Memo Management System. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        // Initialize Quill editor
+        const bodyInput = document.querySelector('input[name="body"]');
+        const quill = new Quill('#bodyEditor', {
+            theme: 'snow',
+            modules: {
+                toolbar: '#toolbar'
+            }
+        });
+
+        // Load existing content if editing
+        if (bodyInput.value) {
+            quill.root.innerHTML = bodyInput.value;
+        }
+
+        // Sync editor content with hidden input before form submission
+        document.getElementById('memoForm').addEventListener('submit', function() {
+            bodyInput.value = quill.root.innerHTML;
+        });
+    </script>
+</body>
+</html>
