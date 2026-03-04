@@ -1,0 +1,49 @@
+# MongoDB Configuration
+# For local MongoDB instance (default)
+SPRING_DATA_MONGODB_URI=mongodb://localhost:27017/memo_database
+
+# For MongoDB Atlas (cloud) - replace with your connection string
+# SPRING_DATA_MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/memo_database?retryWrites=true&w=majority
+
+# For MongoDB with authentication (local)
+# SPRING_DATA_MONGODB_URI=mongodb://username:password@localhost:27017/memo_database
+
+# Application Configuration
+SPRING_APPLICATION_NAME=memo-project
+
+# Server Configuration
+SERVER_PORT=8080
+
+# Logging Configuration
+LOGGING_LEVEL_COM_MEMOAPP=INFO
+LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=INFO
+LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA=INFO
+
+# Database Auto Index Creation (set to false in production)
+SPRING_DATA_MONGODB_AUTO_INDEX_CREATION=true
+
+# File Upload Configuration (if implementing file uploads)
+# SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=10MB
+# SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=10MB
+
+# Security Configuration (if adding authentication)
+# SPRING_SECURITY_USER_NAME=admin
+# SPRING_SECURITY_USER_PASSWORD=your_secure_password
+
+# Email Configuration (if adding email functionality)
+# SPRING_MAIL_HOST=smtp.gmail.com
+# SPRING_MAIL_PORT=587
+# SPRING_MAIL_USERNAME=your_email@gmail.com
+# SPRING_MAIL_PASSWORD=your_app_password
+# SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+# SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+
+# JWT Configuration (if adding JWT authentication)
+# JWT_SECRET=your_jwt_secret_key_here
+# JWT_EXPIRATION=86400000
+
+# External API Keys (if integrating with external services)
+# OPENAI_API_KEY=your_openai_api_key
+# AWS_ACCESS_KEY_ID=your_aws_access_key
+# AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+# AWS_REGION=us-east-1
